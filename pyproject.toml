@@ -21,6 +21,7 @@ name = "transpiler-mate-api"
 dynamic = ["version"]
 description = "Stable, execution-environment-neutral contracts for transpiler-mate plugins"
 requires-python = ">=3.10"
+license = "Apache-2.0"
 license-files = ["LICENSE"]
 keywords = [
   "cwl",
