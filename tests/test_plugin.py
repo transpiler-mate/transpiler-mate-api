@@ -21,8 +21,7 @@ from cwl_utils.parser.cwl_v1_0 import Workflow as WorkflowV1_0
 from cwl_utils.parser.cwl_v1_2 import CommandLineTool, Workflow
 from pydantic import AnyUrl, BaseModel, ValidationError
 
-import transpiler_mate.api as api
-import transpiler_mate.api.software_application_models as software_application_models
+from transpiler_mate import api
 from transpiler_mate.api import (
     EmptyOptions,
     PluginError,
@@ -32,6 +31,7 @@ from transpiler_mate.api import (
     TranspilerContext,
     TranspilerContextResolver,
     TranspilerPlugin,
+    software_application_models,
     transpiler_plugin,
 )
 from transpiler_mate.api.software_application_models import SoftwareApplication

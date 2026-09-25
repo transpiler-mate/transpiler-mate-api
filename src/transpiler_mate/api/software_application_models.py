@@ -174,9 +174,7 @@ class Role(SoftwareApplicationModel):
     """
     additional_type: AnyUrl | None = Field(
         default=None,
-        validation_alias=AliasChoices(
-            "additionalType", "https://schema.org/additionalType"
-        ),
+        validation_alias=AliasChoices("additionalType", "https://schema.org/additionalType"),
         serialization_alias="https://schema.org/additionalType",
     )
     """
@@ -236,9 +234,7 @@ class DefinedTerm(SoftwareApplicationModel):
     """
     in_defined_term_set: AnyUrl | None = Field(
         default=None,
-        validation_alias=AliasChoices(
-            "inDefinedTermSet", "https://schema.org/inDefinedTermSet"
-        ),
+        validation_alias=AliasChoices("inDefinedTermSet", "https://schema.org/inDefinedTermSet"),
         serialization_alias="https://schema.org/inDefinedTermSet",
     )
     """
@@ -311,9 +307,7 @@ class ImageObject(SoftwareApplicationModel):
     """
     encoding_format: str | None = Field(
         default=None,
-        validation_alias=AliasChoices(
-            "encodingFormat", "https://schema.org/encodingFormat"
-        ),
+        validation_alias=AliasChoices("encodingFormat", "https://schema.org/encodingFormat"),
         serialization_alias="https://schema.org/encodingFormat",
     )
     """
@@ -397,21 +391,17 @@ class SoftwareApplication(SoftwareApplicationModel):
     """
     URL of a reference Web page that unambiguously indicates the item's identity. E.g. the URL of the item's Wikipedia page, Wikidata entry, or official website.
     """
-    keywords: str | AnyUrl | DefinedTerm | list[str | AnyUrl | DefinedTerm] | None = (
-        Field(
-            default=None,
-            validation_alias=AliasChoices("keywords", "https://schema.org/keywords"),
-            serialization_alias="https://schema.org/keywords",
-        )
+    keywords: str | AnyUrl | DefinedTerm | list[str | AnyUrl | DefinedTerm] | None = Field(
+        default=None,
+        validation_alias=AliasChoices("keywords", "https://schema.org/keywords"),
+        serialization_alias="https://schema.org/keywords",
     )
     """
     Keywords or tags used to describe some item. Multiple textual entries in a keywords list are typically delimited by commas, or by repeating the property.
     """
     operating_system: str | list[str] | None = Field(
         default=None,
-        validation_alias=AliasChoices(
-            "operatingSystem", "https://schema.org/operatingSystem"
-        ),
+        validation_alias=AliasChoices("operatingSystem", "https://schema.org/operatingSystem"),
         serialization_alias="https://schema.org/operatingSystem",
     )
     """
@@ -429,9 +419,7 @@ class SoftwareApplication(SoftwareApplicationModel):
     """
     software_version: str = Field(
         ...,
-        validation_alias=AliasChoices(
-            "softwareVersion", "https://schema.org/softwareVersion"
-        ),
+        validation_alias=AliasChoices("softwareVersion", "https://schema.org/softwareVersion"),
         serialization_alias="https://schema.org/softwareVersion",
     )
     """
@@ -439,9 +427,7 @@ class SoftwareApplication(SoftwareApplicationModel):
     """
     software_help: CreativeWork | list[CreativeWork] = Field(
         ...,
-        validation_alias=AliasChoices(
-            "softwareHelp", "https://schema.org/softwareHelp"
-        ),
+        validation_alias=AliasChoices("softwareHelp", "https://schema.org/softwareHelp"),
         serialization_alias="https://schema.org/softwareHelp",
     )
     """
@@ -463,14 +449,10 @@ class SoftwareApplication(SoftwareApplicationModel):
     """
     The author of this content or rating. Please note that author is special in that HTML 5 provides a special mechanism for indicating authorship via the rel tag. That is equivalent to this and may be used interchangeably.
     """
-    contributor: ContributorRole | Person | list[ContributorRole | Person] | None = (
-        Field(
-            default=None,
-            validation_alias=AliasChoices(
-                "contributor", "https://schema.org/contributor"
-            ),
-            serialization_alias="https://schema.org/contributor",
-        )
+    contributor: ContributorRole | Person | list[ContributorRole | Person] | None = Field(
+        default=None,
+        validation_alias=AliasChoices("contributor", "https://schema.org/contributor"),
+        serialization_alias="https://schema.org/contributor",
     )
     """
     A secondary contributor to the CreativeWork or Event.
@@ -497,9 +479,7 @@ class SoftwareSourceCode(SoftwareApplicationModel):
     )
     code_repository: AnyUrl = Field(
         ...,
-        validation_alias=AliasChoices(
-            "codeRepository", "https://schema.org/codeRepository"
-        ),
+        validation_alias=AliasChoices("codeRepository", "https://schema.org/codeRepository"),
         serialization_alias="https://schema.org/codeRepository",
     )
     """
@@ -507,9 +487,7 @@ class SoftwareSourceCode(SoftwareApplicationModel):
     """
     target_product: SoftwareApplication = Field(
         ...,
-        validation_alias=AliasChoices(
-            "targetProduct", "https://schema.org/targetProduct"
-        ),
+        validation_alias=AliasChoices("targetProduct", "https://schema.org/targetProduct"),
         serialization_alias="https://schema.org/targetProduct",
     )
     """
@@ -524,9 +502,7 @@ class SoftwareSourceCode(SoftwareApplicationModel):
     )
     issue_tracker: AnyUrl | None = Field(
         default=None,
-        validation_alias=AliasChoices(
-            "issueTracker", "https://schema.org/issueTracker"
-        ),
+        validation_alias=AliasChoices("issueTracker", "https://schema.org/issueTracker"),
         serialization_alias="https://schema.org/issueTracker",
     )
     related_link: AnyUrl | list[AnyUrl] | None = Field(

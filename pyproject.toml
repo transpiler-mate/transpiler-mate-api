@@ -1,5 +1,19 @@
+# Copyright 2026 Terradue
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 [build-system]
-requires = ["hatchling>=1.27"]
+requires = ["hatchling>=1.32.4"]
 build-backend = "hatchling.build"
 
 [project]
@@ -7,8 +21,14 @@ name = "transpiler-mate-api"
 dynamic = ["version"]
 description = "Stable, execution-environment-neutral contracts for transpiler-mate plugins"
 requires-python = ">=3.10"
-license = "Apache-2.0"
+license-files = ["LICENSE"]
+keywords = [
+  "cwl",
+  "commonwl",
+  "transpiler-mate"
+]
 authors = [
+  { name = "Terradue srl", email = "info@terradue.com" },
   { name = "Simone Tripodi", email = "simone.tripodi@terradue.com" },
   { name = "Fabrice Brito", email = "fabrice.brito@terradue.com" },
 ]
@@ -29,34 +49,73 @@ dependencies = [
   "pydantic>=2.13.4,<3",
 ]
 
-[project.urls]
-Documentation = "https://transpiler-mate.github.io/transpiler-mate-api/"
-Issues = "https://github.com/transpiler-mate/transpiler-mate-api/issues"
-Source = "https://github.com/transpiler-mate/transpiler-mate-api"
+# ---------------------------------------------------------------------------
+# Project Refs
+# ---------------------------------------------------------------------------
 
-[tool.hatch.build.targets.wheel]
-packages = ["src/transpiler_mate"]
+[project.urls]
+Documentation = "https://Transpiler-Mate.github.io/transpiler-mate-api/"
+Issues = "https://github.com/Transpiler-Mate/transpiler-mate-api/issues"
+Source = "https://github.com/Transpiler-Mate/transpiler-mate-api"
+Changelog = "https://github.com/Transpiler-Mate/transpiler-mate-api/blob/main/CHANGELOG.md"
+
+# ---------------------------------------------------------------------------
+# Versioning and packaging
+# ---------------------------------------------------------------------------
 
 [tool.hatch.version]
 path = "src/transpiler_mate/api/__about__.py"
 
 [tool.hatch.build.targets.sdist]
-include = ["src/transpiler_mate", "tests", "examples", "docs", "README.md", "mkdocs.yml", "pyproject.toml"]
+include = [
+  "/src",
+  "/tests",
+  "/docs",
+  "/README.md",
+  "/CHANGELOG.md",
+  "/LICENSE",
+  "/NOTICE",
+  "/pyproject.toml",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/transpiler_mate"]
+
+# ---------------------------------------------------------------------------
+# Coverage
+# ---------------------------------------------------------------------------
+
+[tool.coverage.run]
+source_pkgs = ["transpiler_mate/api", "tests"]
+branch = true
+parallel = true
+omit = [
+  "src/transpiler_mate/api/__about__.py",
+]
 
 [tool.coverage.paths]
-transpiler_mate = ["src/transpiler_mate", "*/transpiler-mate-api/src/transpiler_mate"]
-tests = ["tests", "*/transpiler-mate-api/tests"]
+transpiler_mate_api = [
+  "src/transpiler_mate/api",
+  "*/transpiler-mate-api/src/transpiler_mate/api"
+]
 
 [tool.coverage.report]
+show_missing = true
+skip_covered = false
+
 exclude_lines = [
   "no cov",
   "if __name__ == .__main__.:",
   "if TYPE_CHECKING:",
+  "raise NotImplementedError",
 ]
+
+# ---------------------------------------------------------------------------
+# Hatch: test environment
+# ---------------------------------------------------------------------------
 
 [tool.hatch.envs.test]
 skip-install = false
-dev-mode = true
 dependencies = [
   "pytest>=8.4,<10",
   "pytest-cov>=6.2,<8",
@@ -65,70 +124,196 @@ dependencies = [
 [tool.hatch.envs.test.scripts]
 test = "pytest {args:tests}"
 testv = "pytest --verbose {args:tests}"
-test-cov = "pytest --cov=transpiler_mate --cov-report=term-missing {args:tests}"
-test-show-setup = "pytest --setup-show"
+test-cov = "pytest --cov=transpiler_mate/api --cov-report=term-missing --cov-report=xml:coverage.xml {args:tests}"
+test-show-setup = "pytest --setup-show {args:tests}"
+
+[[tool.hatch.envs.test.matrix]]
+python = ["3.10", "3.11", "3.12", "3.13", "3.14"]
+
+# ---------------------------------------------------------------------------
+# Pytest
+# ---------------------------------------------------------------------------
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
 addopts = [
   "--strict-config",
   "--strict-markers",
 ]
 
-[[tool.hatch.envs.test.matrix]]
-python = ["3.10", "3.11", "3.12", "3.13", "3.14"]
+xfail_strict = true
+
+# ---------------------------------------------------------------------------
+# Hatch: development and quality environment
+# ---------------------------------------------------------------------------
 
 [tool.hatch.envs.dev]
 skip-install = false
 dependencies = [
-  "pytest>=8.4,<10",
   "mypy>=2.3.0",
+  "types-jsonschema>=4.26.0.20260518",
   "ruff>=0.16.0",
   "bandit>=1.9.4",
+  "pytest>=8.4,<10",
 ]
 
-[tool.mypy]
-strict = true
-namespace_packages = true
-explicit_package_bases = true
-mypy_path = "$MYPY_CONFIG_FILE_DIR/src"
+# ---------------------------------------------------------------------------
+# Ruff
+# ---------------------------------------------------------------------------
+
+[tool.ruff]
+line-length = 100
 
 [tool.ruff.lint]
 # Start with the essential rules
 select = [
-  "F",    # Pyflakes (Critical for bugs)
-  "E",    # pycodestyle Errors
-  "W",    # pycodestyle Warnings
-  "I",    # isort (Import sorting)
-  "UP",   # pyupgrade (Modern syntax)
-  "B",    # flake8-bugbear (Common bugs)
-  "C4",   # flake8-comprehensions
-  "SIM",  # flake8-simplify
-  "FA",   # flake8-future-annotations
-  "TC",   # flake8-type-checking
-  "PTH",  # flake8-use-pathlib
-  "RET",  # flake8-return
-  "C90",  # McCabe Complexity (Enables C901)
+  # Core correctness
+  "F",      # Pyflakes
+  "E",      # pycodestyle errors
+  "W",      # pycodestyle warnings
+
+  # Imports and modernization
+  "I",      # isort
+  "UP",     # pyupgrade
+  "FA",     # future annotations
+  "TC",     # type-checking imports
+
+  # Bugs and correctness
+  "B",      # flake8-bugbear
+  "RET",    # flake8-return
+  "PTH",    # pathlib usage
+  "C4",     # comprehensions
+
+  # Simplification and readability
+  "SIM",    # flake8-simplify
+
+  # Complexity
+  "C90",    # McCabe complexity
+
+  # Pylint-derived checks
+  "PLE",    # Pylint errors
+  "PLW",    # Pylint warnings
+  "PLR",    # Pylint refactor/design checks
+
+  # Performance and Ruff-specific quality checks
+  "PERF",
+  "RUF",
 ]
 
-# Ignore rules that conflict with the formatter (Ruff Format/Black)
 ignore = [
-  "E501", # Line too long (handled by formatter)
-  "W191", # Tab indentation (handled by formatter)
-  "E111", # Indentation issues (handled by formatter)
-  "E114", # Indentation issues (handled by formatter)
-  "E117", # Over-indented (handled by formatter)
+  # Formatter-controlled rules
+  "E501",   # line length
+  "W191",   # tab indentation
+  "E111",   # indentation
+  "E114",   # indentation
+  "E117",   # over-indented
+
+  # Too opinionated for a general project template.
+  # Enable per repository if useful.
+  # "PLR0904", # too many public methods
 ]
 
 [tool.ruff.lint.flake8-type-checking]
+# Pydantic resolves model field annotations at runtime.
 runtime-evaluated-base-classes = ["pydantic.BaseModel"]
 
 [tool.ruff.lint.mccabe]
 # Flag errors (C901) whenever complexity exceeds 10 (default is 10)
-max-complexity = 10
+max-complexity = 7
+
+[tool.ruff.lint.pylint]
+# Keep these deliberately stricter than Pylint defaults.
+max-args = 6
+max-branches = 10
+max-returns = 6
+max-statements = 40
+
+# ---------------------------------------------------------------------------
+# Mypy
+# ---------------------------------------------------------------------------
+
+[tool.mypy]
+
+# Resolve the transpiler_mate namespace package from the src layout.
+mypy_path = "$MYPY_CONFIG_FILE_DIR/src"
+explicit_package_bases = true
+
+# Strict typing is the default for new Terradue Python projects.
+strict = true
+
+# Improve diagnostics.
+pretty = true
+show_error_codes = true
+show_error_context = true
+warn_unreachable = true
+
+# Avoid silently accepting untyped third-party APIs.
+ignore_missing_imports = false
+
+# Files checked by default.
+files = [
+  "src/transpiler_mate/api",
+  "tests",
+]
+
+# These upstream modules do not provide typing metadata in this installation.
+# Keep the gateway strict while excluding these dependency implementations.
+[[tool.mypy.overrides]]
+module = []
+ignore_missing_imports = true
+follow_imports = "skip"
 
 [tool.hatch.envs.dev.scripts]
-typecheck = "mypy --install-types --non-interactive {args:src tests}"
-lint = "ruff format {args:src tests}"
-check = "ruff check --fix {args:src tests}"
+# ---------------------------------------------------------------------------
+# Developer commands
+#
+# These commands are allowed to modify files.
+# ---------------------------------------------------------------------------
+
+format = "ruff format {args:src tests}"
+
+fix = [
+  "ruff check --fix {args:src tests}",
+  "ruff format {args:src tests}",
+]
+
+# ---------------------------------------------------------------------------
+# Verification commands
+#
+# These commands MUST NOT modify files and are suitable for CI.
+# ---------------------------------------------------------------------------
+
+format-check = "ruff format --check {args:src tests}"
+
+lint = "ruff check {args:src tests}"
+lint-check = "ruff check {args:src tests}"
+design-check = "ruff check --select C90,PLR {args:src tests}"
+
+typecheck = "mypy {args:src tests}"
+
 security = "bandit -r {args:src}"
+
+# Run the complete static quality gate.
+quality = [
+  "ruff format --check {args:src tests}",
+  "ruff check {args:src tests}",
+  "mypy {args:src tests}",
+  "bandit -r {args:src}",
+]
+
+# Complete local/CI validation including tests.
+check = [
+  "ruff format --check {args:src tests}",
+  "ruff check {args:src tests}",
+  "mypy {args:src tests}",
+  "bandit -r {args:src}",
+  "pytest {args:tests}",
+]
+
+# Preserve editable-install test extras and uv's local wheel resolution.
+[project.optional-dependencies]
+test = [
+  "pytest>=8.4,<10",
+  "pytest-cov>=6.2,<8"
+]

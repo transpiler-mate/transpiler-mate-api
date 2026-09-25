@@ -69,9 +69,7 @@ class TranspilerContext(BaseModel):
     process_id: Annotated[
         str | None, Field(default=None, description="The Process fragment identifier")
     ] = None
-    metadata: Annotated[
-        SoftwareApplication, Field(description="The input CWL document metadata")
-    ]
+    metadata: Annotated[SoftwareApplication, Field(description="The input CWL document metadata")]
     document: Annotated[
         Mapping[str, Process],
         Field(description="The input CWL document declared Processes"),

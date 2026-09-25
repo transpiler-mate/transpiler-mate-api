@@ -11,33 +11,33 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+name: docs
 permissions:
   contents: write
-  
-name: docs
+
 on:
   push:
     branches:
-      - docs
-      - develop
-      - main
+    - develop
+    - main
+    - master
     paths:
-      # Only rebuild website when docs have changed
-      - 'README.md'
-      - 'docs/**'
-      - 'mkdocs.yaml'
-      - .github/**
+    # Only rebuild website when docs have changed
+    - README.md
+    - docs/**
+    - mkdocs.yaml
+    - .github/**
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout master
-        uses: actions/checkout@v7
-
-      - name: Set up Python 3.x
-        uses: actions/setup-python@v7
-        with:
-          python-version: 3.x
-      - run: pip install mkdocs-material mkdocs-mermaid2-plugin
-      - run: mkdocs gh-deploy --force
+    - name: Checkout master
+      uses: actions/checkout@v7.0.1
+    - name: Set up Python 3.x
+      uses: actions/setup-python@v7.0.0
+      with:
+        python-version: 3.x
+    - run: pip install "mkdocs<=2.0.0" mkdocs-material mkdocs-mermaid2-plugin mkdocs-jupyter legacy-cgi mkdocstrings[python] mkdocs-build-plantuml-plugin
+    - run: mkdocs gh-deploy --force
