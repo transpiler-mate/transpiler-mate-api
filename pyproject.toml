@@ -45,7 +45,7 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
 dependencies = [
-  "cwl-utils>=0.43,<1",
+  "cwl-utils>=0.44,<1",
   "email-validator>=2.3.0",
   "pydantic>=2.13.4,<3",
 ]
