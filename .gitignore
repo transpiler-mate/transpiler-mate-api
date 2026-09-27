@@ -7,3 +7,4 @@ uv.lock
 .ruff_cache
 .vscode
 site
+dist
