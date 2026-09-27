@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Terradue" /><link rel="canonical" href="https://transpiler-mate.github.io/transpiler-mate-api/how-to/define-options/" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Define and validate options - Transpiler Mate API</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Define and validate options";
+        var mkdocs_page_input_path = "how-to/define-options.md";
+        var mkdocs_page_url = "/transpiler-mate-api/how-to/define-options/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/python.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/toml.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/bash.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Transpiler Mate API
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+    <ul>
+    <li class="toctree-l2"><a class="reference internal" href="../..#choose-what-you-need">Choose what you need</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../..#scope">Scope</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../..#requirements">Requirements</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Tutorials</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorials/build-your-first-plugin/">Build your first plugin</a>
+    <ul>
+    <li class="toctree-l2"><a class="reference internal" href="../../tutorials/build-your-first-plugin/#1-create-the-package">1. Create the package</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../../tutorials/build-your-first-plugin/#2-define-typed-options">2. Define typed options</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../../tutorials/build-your-first-plugin/#3-register-the-execution-function">3. Register the execution function</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../../tutorials/build-your-first-plugin/#4-export-the-plugin-object">4. Export the plugin object</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../../tutorials/build-your-first-plugin/#5-test-execution-directly">5. Test execution directly</a>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">How-to guides</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../develop-a-plugin/">Develop and package a plugin</a>
+    <ul>
+    <li class="toctree-l2"><a class="reference internal" href="../develop-a-plugin/#declare-the-dependency">Declare the dependency</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../develop-a-plugin/#choose-an-options-model">Choose an options model</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../develop-a-plugin/#implement-a-stateless-function">Implement a stateless function</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../develop-a-plugin/#export-the-registration">Export the registration</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../develop-a-plugin/#integrate-with-a-runtime">Integrate with a runtime</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../develop-a-plugin/#make-writes-robust">Make writes robust</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../develop-a-plugin/#verify-the-contract">Verify the contract</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Define and validate options</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#reject-misspelled-fields">Reject misspelled fields</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#use-no-options">Use no options</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#separate-option-validation-from-domain-validation">Separate option validation from domain validation</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../resolve-another-source/">Resolve another CWL source</a>
+    <ul>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../report-failures/">Report failures correctly</a>
+    <ul>
+    <li class="toctree-l2"><a class="reference internal" href="../report-failures/#raise-pluginfailureerror-for-expected-domain-rejection">Raise PluginFailureError for expected domain rejection</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../report-failures/#raise-pluginexecutionerror-for-technical-failure">Raise PluginExecutionError for technical failure</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../report-failures/#preserve-errors-that-are-already-classified">Preserve errors that are already classified</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../report-failures/#write-useful-messages">Write useful messages</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../test-a-plugin/">Test a plugin</a>
+    <ul>
+    <li class="toctree-l2"><a class="reference internal" href="../test-a-plugin/#test-registration">Test registration</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../test-a-plugin/#build-a-focused-context">Build a focused context</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../test-a-plugin/#test-both-failure-categories">Test both failure categories</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../test-a-plugin/#run-repository-checks">Run repository checks</a>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/plugin-api/">Plugin API</a>
+    <ul>
+    <li class="toctree-l2"><a class="reference internal" href="../../reference/plugin-api/#transpiler_plugin">transpiler_plugin</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../../reference/plugin-api/#pluginregistrationoptionst">PluginRegistration[OptionsT]</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../../reference/plugin-api/#transpilerpluginoptionst">TranspilerPlugin[OptionsT]</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../../reference/plugin-api/#emptyoptions">EmptyOptions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../../reference/plugin-api/#execution-contract">Execution contract</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/context-api/">Context API</a>
+    <ul>
+    <li class="toctree-l2"><a class="reference internal" href="../../reference/context-api/#transpilercontext">TranspilerContext</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="../../reference/context-api/#processes">processes</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../../reference/context-api/#get_processes_by_type">get_processes_by_type</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="../../reference/context-api/#resolved_process">resolved_process</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../../reference/context-api/#transpilercontextresolver">TranspilerContextResolver</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../../reference/context-api/#important-distinctions">Important distinctions</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/exceptions/">Exception contract</a>
+    <ul>
+    <li class="toctree-l2"><a class="reference internal" href="../../reference/exceptions/#decision-table">Decision table</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../../reference/exceptions/#ambiguous-io-cases">Ambiguous I/O cases</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../../reference/exceptions/#pluginerror">PluginError</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../../reference/exceptions/#pluginfailureerror">PluginFailureError</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../../reference/exceptions/#pluginexecutionerror">PluginExecutionError</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../../reference/exceptions/#boundaries-not-specified-here">Boundaries not specified here</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/software-metadata/">Software metadata models</a>
+    <ul>
+    <li class="toctree-l2"><a class="reference internal" href="../../reference/software-metadata/#input-aliases">Input aliases</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../../reference/software-metadata/#serialization-defaults">Serialization defaults</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../../reference/software-metadata/#required-softwareapplication-fields">Required SoftwareApplication fields</a>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Explanation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../explanation/architecture/">Architecture and boundaries</a>
+    <ul>
+    <li class="toctree-l2"><a class="reference internal" href="../../explanation/architecture/#why-the-registration-is-data">Why the registration is data</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../../explanation/architecture/#why-the-context-is-immutable">Why the context is immutable</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../../explanation/architecture/#why-discovery-is-absent">Why discovery is absent</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../../explanation/architecture/#why-execution-returns-none">Why execution returns None</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../explanation/failure-semantics/">Failure semantics</a>
+    <ul>
+    <li class="toctree-l2"><a class="reference internal" href="../../explanation/failure-semantics/#failure-versus-execution-error">Failure versus execution error</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../../explanation/failure-semantics/#what-the-types-do-not-decide">What the types do not decide</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../../explanation/failure-semantics/#why-causal-chaining-matters">Why causal chaining matters</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="../../explanation/failure-semantics/#validation-is-a-separate-phase">Validation is a separate phase</a>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Transpiler Mate API</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">How-to guides</li>
+      <li class="breadcrumb-item active">Define and validate options</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/transpiler-mate/transpiler-mate-api/edit/master/docs/how-to/define-options.md">Edit on transpiler-mate/transpiler-mate-api</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="define-and-validate-options">Define and validate options<a class="headerlink" href="#define-and-validate-options" title="Permanent link">&para;</a></h1>
+<p>Set <code>options_model</code> to a Pydantic <code>BaseModel</code> subclass. This keeps the transport representation—CLI strings, JSON, or worker messages—outside the plugin's execution logic.</p>
+<h2 id="reject-misspelled-fields">Reject misspelled fields<a class="headerlink" href="#reject-misspelled-fields" title="Permanent link">&para;</a></h2>
+<pre><code class="language-python">from pathlib import Path
+from typing import Literal
+
+from pydantic import BaseModel, ConfigDict, Field
+
+
+class Options(BaseModel):
+    model_config = ConfigDict(extra=&quot;forbid&quot;)
+
+    output: Path
+    dialect: Literal[&quot;stable&quot;, &quot;experimental&quot;] = &quot;stable&quot;
+    workers: int = Field(default=1, ge=1)
+</code></pre>
+<p>Use Pydantic validators for shape, type, range, and relationships that can be checked without the resolved document. A host normally constructs this model before calling <code>execute</code>.</p>
+<h2 id="use-no-options">Use no options<a class="headerlink" href="#use-no-options" title="Permanent link">&para;</a></h2>
+<pre><code class="language-python">from transpiler_mate.api import EmptyOptions, TranspilerContext, transpiler_plugin
+
+
+@transpiler_plugin(
+    name=&quot;fixed-target&quot;,
+    description=&quot;Generate the fixed target format&quot;,
+    options_model=EmptyOptions,
+)
+def plugin(context: TranspilerContext, options: EmptyOptions) -&gt; None:
+    ...
+</code></pre>
+<p><code>EmptyOptions</code> is not an invitation to accept arbitrary configuration: its <code>extra="forbid"</code> setting rejects every unknown field.</p>
+<h2 id="separate-option-validation-from-domain-validation">Separate option validation from domain validation<a class="headerlink" href="#separate-option-validation-from-domain-validation" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Invalid types, missing option fields, forbidden extra fields, and numeric constraints should produce Pydantic <code>ValidationError</code> while constructing the options model.</li>
+<li>A well-formed option that cannot be honored for this particular CWL document should cause <code>PluginFailureError</code> during execution.</li>
+<li>A valid option that fails because an external tool crashes should cause <code>PluginExecutionError</code> during execution.</li>
+</ul>
+<p>For example, validate that <code>workers &gt;= 1</code> in the model. If <code>dialect="stable"</code> is valid in general but the current document uses an experimental CWL feature, raise <code>PluginFailureError</code> from <code>execute</code>.</p>
+<p>Do not catch a <code>ValidationError</code> merely to relabel it as a plugin error unless the validation occurs inside execution and you can add meaningful domain context. Runtime behavior for top-level option validation is outside this API.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../develop-a-plugin/" class="btn btn-neutral float-left" title="Develop and package a plugin"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../resolve-another-source/" class="btn btn-neutral float-right" title="Resolve another CWL source">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/transpiler-mate/transpiler-mate-api" class="fa fa-code-fork" style="color: #fcfcfc"> transpiler-mate/transpiler-mate-api</a>
+        </span>
+    
+    
+      <span><a href="../develop-a-plugin/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../resolve-another-source/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
