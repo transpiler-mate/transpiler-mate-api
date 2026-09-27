@@ -25,7 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improve type annotations and internal code quality by addressing mypy, Ruff, and Bandit findings, without changing public APIs or runtime behavior.
 
-## [0.1.0] - 2026-09-01
+## [1.0.0] - 2026-09-01
 
 ### Added
 
