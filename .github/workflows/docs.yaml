@@ -36,7 +36,7 @@ jobs:
     - name: Checkout master
       uses: actions/checkout@v7.0.1
     - name: Set up Python 3.x
-      uses: actions/setup-python@v7.0.0
+      uses: actions/setup-python@v7.1.0
       with:
         python-version: 3.x
     - run: pip install "mkdocs<=2.0.0" mkdocs-material mkdocs-mermaid2-plugin mkdocs-jupyter legacy-cgi mkdocstrings[python] mkdocs-build-plantuml-plugin
