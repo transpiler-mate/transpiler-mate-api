@@ -128,11 +128,24 @@ def test_plugin_exceptions_share_a_common_base() -> None:
     assert issubclass(PluginFailureError, PluginError)
 
 
-def test_software_application_models_are_exported_from_api() -> None:
+@pytest.mark.parametrize("register_generic_reference", [False, True])
+def test_software_application_models_are_exported_from_api(
+    monkeypatch: pytest.MonkeyPatch, register_generic_reference: bool
+) -> None:
+    if register_generic_reference:
+        # Some Pydantic versions register generic bases in the caller's module for pickling.
+        generic_base = software_application_models.Model.__bases__[0]
+        monkeypatch.setattr(generic_base, "__module__", software_application_models.__name__)
+        monkeypatch.setitem(
+            vars(software_application_models), "RootModel[SoftwareApplication]", generic_base
+        )
+
     models = {
         name: model
         for name, model in vars(software_application_models).items()
-        if isinstance(model, type)
+        # Generated generic names contain brackets and are not Python export identifiers.
+        if name.isidentifier()
+        and isinstance(model, type)
         and issubclass(model, BaseModel)
         and model.__module__ == software_application_models.__name__
     }
