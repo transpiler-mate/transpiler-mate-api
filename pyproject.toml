@@ -87,7 +87,7 @@ packages = ["src/transpiler_mate"]
 # ---------------------------------------------------------------------------
 
 [tool.coverage.run]
-source_pkgs = ["transpiler_mate/api", "tests"]
+source = ["src/transpiler_mate/api"]
 branch = true
 parallel = true
 omit = [
@@ -125,7 +125,7 @@ dependencies = [
 [tool.hatch.envs.test.scripts]
 test = "pytest {args:tests}"
 testv = "pytest --verbose {args:tests}"
-test-cov = "pytest --cov=transpiler_mate/api --cov-report=term-missing --cov-report=xml:coverage.xml {args:tests}"
+test-cov = "pytest --cov --cov-report=term-missing --cov-report=xml:coverage.xml {args:tests}"
 test-show-setup = "pytest --setup-show {args:tests}"
 
 [[tool.hatch.envs.test.matrix]]
